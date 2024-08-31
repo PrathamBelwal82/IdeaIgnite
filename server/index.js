@@ -11,7 +11,7 @@ const app = express();
 const server = http.createServer(app); // Create HTTP server for socket.io
 const io = socketIo(server, {
   cors: {
-    origin: 'http://localhost:5173', // Your client URL
+    origin: 'https://idea-ignite-2.vercel.app', // Your client URL
     methods: ['GET', 'POST'],
     credentials: true // Allow cookies and authentication headers
   }
