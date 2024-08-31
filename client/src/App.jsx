@@ -3,10 +3,12 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import { Container } from '@mui/material';
 import Login from '../components/Login';
 import Register from '../components/Register';
-import ChatBox from '../components/ChatBox';
-import Dashboard from '../components/DashBoard';
+import CreateEventForm from '../components/CreateEventForm.jsx'; // Import the CreateEventForm component
+import EventChat from '../components/EventChat'; // Import the EventChat component
+import LiveEvents from '../components/LiveEvents';
+import DashBoard from '../components/Dashboard';
 import { getCookie } from '../utils/getCookies';
-import Navbar from "../components/NavBar";
+
 // Higher-order component to protect routes
 const ProtectedRoute = ({ element, ...rest }) => {
   const token = getCookie('token');
@@ -20,16 +22,22 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          
+          <Route path="/live-events" element={<LiveEvents />} />
+          {/* Protected Routes */}
           <Route
-            path="/chatbox"
-            element={<ProtectedRoute element={<ChatBox />} />}
+            path="/create-event"
+            element={<ProtectedRoute element={<CreateEventForm />} />}
           />
           <Route
-            path="/"
-            element={<ProtectedRoute element={<Dashboard />} />}
+            path="/event/:eventId/chat"
+            element={<ProtectedRoute element={<EventChat />} />}
           />
-          <Route path="*" element={<Navigate to="/" />} />
+          <Route
+            path="dashboard"
+            element={<ProtectedRoute element={<DashBoard />} />}
+          />
+
+          <Route path="/" element={getCookie('token') ? <Navigate to="/dashboard" /> : <Navigate to="/login" />} />
         </Routes>
       </Container>
     </Router>
