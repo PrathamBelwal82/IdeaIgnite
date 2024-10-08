@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import QASession from './QASession'; // Import the component
-
+import '../src/EventDetails.css'
 function EventDetails() {
   const { id } = useParams();
   const [event, setEvent] = useState(null);
@@ -25,11 +25,28 @@ function EventDetails() {
   }
 
   return (
-    // Inside the EventDetails component
     <div className="event-details">
-      <QASession />
-      <h1>{event.description}</h1>
-      {event.video && <video src={`http://localhost:4000/${event.video}`} controls width="300" />}
+      <div className="video-donation-container">
+        <div className="video-container">
+          <h1>{event.description}</h1>
+          {event.video && (
+            <video
+              src={`http://localhost:4000/${event.video}`}
+              controls
+              width="100%"
+              style={{ maxWidth: '600px' }}
+            />
+          )}
+        </div>
+        <div className="donation-placeholder">
+          <h2>Support Us</h2>
+          <p>Your contributions help us succeed!</p>
+          {/* Placeholder for donation buttons or links */}
+          <button>Donate $10</button>
+          <button>Donate $20</button>
+          <button>Donate $50</button>
+        </div>
+      </div>
       <div className="event-images">
         {event.images.map((image, imgIndex) => (
           <img

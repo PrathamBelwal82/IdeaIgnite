@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import '../src/Allevents.css'; // Add your CSS file
 
 function AllEvents() {
   const [events, setEvents] = useState([]);
@@ -24,15 +25,20 @@ function AllEvents() {
       {events.length === 0 ? (
         <p>No events found.</p>
       ) : (
-        <ul>
+        <div className="events-grid">
           {events.map((event) => (
-            <li key={event._id}>
-              <h2>
-                <Link to={`/event/${event._id}`}>{event.description}</Link>
-              </h2>
-            </li>
+            <div key={event._id} className="event-card">
+              <Link to={`/event/${event._id}`}>
+                <img
+                  src={`http://localhost:4000/${event.thumbnail}`}
+                  alt={event.company}
+                  className="event-thumbnail"
+                />
+                <h2 className="event-title">{event.company}</h2>
+              </Link>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );

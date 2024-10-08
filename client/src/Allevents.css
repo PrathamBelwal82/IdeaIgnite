@@ -1,0 +1,46 @@
+/* Allevents.css */
+
+.all-events {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  h1 {
+    margin-bottom: 20px;
+    font-size: 2.5em;
+    color: #333;
+  }
+  
+  .events-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px; /* Space between cards */
+  }
+  
+  .event-card {
+    border: 2px solid #4a90e2; /* Change border color */
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #fff; /* Card background */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Card shadow */
+    transition: transform 0.3s, box-shadow 0.3s; /* Transition effect */
+  }
+  
+  .event-card:hover {
+    transform: translateY(-5px); /* Lift effect on hover */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Shadow on hover */
+  }
+  
+  .event-thumbnail {
+    width: 100%; /* Full width */
+    height: 200px; /* Fixed height */
+    object-fit: cover; /* Cover the area */
+  }
+  
+  .event-title {
+    padding: 10px;
+    font-size: 1.5em;
+    color: #4a90e2; /* Text color */
+    margin: 0;
+  }
+  
