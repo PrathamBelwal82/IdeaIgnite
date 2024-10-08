@@ -1,11 +1,52 @@
-// routes/eventRoutes.js
-
 const express = require('express');
 const router = express.Router();
-const eventController = require('../controllers/eventController');
+const upload = require('../middlewares/uploads');
+const Event = require('../models/Event');
 
-router.post('/create', eventController.createEvent);
-router.get('/:eventId/chats', eventController.getEventChats); // New route to fetch chats
+// GET route to fetch all events
+router.get('/', async (req, res) => {
+    try {
+      const events = await Event.find();
+      res.status(200).json(events);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+  
+  router.get('/:id', async (req, res) => {
+    try {
+      const event = await Event.findById(req.params.id);
+      if (!event) {
+        return res.status(404).json({ message: 'Event not found' });
+      }
+      res.status(200).json(event);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
 
+// POST route to create a new event
+router.post('/', upload.fields([{ name: 'video', maxCount: 1 }, { name: 'images', maxCount: 5 }]), async (req, res) => {
+  try {
+    const { description } = req.body;
+    const videoPath = req.files['video'] ? req.files['video'][0].path : null;
+    const imagePaths = req.files['images'] ? req.files['images'].map(file => file.path) : [];
 
+    const event = new Event({
+      description,
+      video: videoPath,
+      images: imagePaths,
+    });
+
+    await event.save();
+    res.status(201).json({ message: 'Event successfully created!', event });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Export the router
 module.exports = router;

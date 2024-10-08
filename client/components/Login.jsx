@@ -27,8 +27,8 @@ function Login() {
   };
 
   return (
-    <div>Inconvience caused by AWS Server will bring website up as soon as possible.</div>
-    /*
+    <div>
+    
     <Container>
       <Typography variant="h4">Login</Typography>
       <form onSubmit={handleSubmit}>
@@ -54,7 +54,7 @@ function Login() {
           Login
         </Button>
       </form>
-    </Container>*/
+    </Container></div>
   );
 }
 
