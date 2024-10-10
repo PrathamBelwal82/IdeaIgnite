@@ -1,62 +1,90 @@
 import React, { useState, useEffect } from 'react';
 import { io } from 'socket.io-client';
 import { useParams } from 'react-router-dom';
-import '../src/QA.css'
-const socket = io('http://localhost:4000'); // Adjust to your backend URL
+import '../src/QA.css';
+import Cookies from 'js-cookie';
+
+const socket = io('http://localhost:4000'); // Adjust this to your backend URL
 
 function QASession() {
   const { id } = useParams(); // Get the event ID from the URL
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
+  const [replyMessage, setReplyMessage] = useState('');
+  const [replyTo, setReplyTo] = useState(null); // To track which message you are replying to
 
   useEffect(() => {
-    // Join the room for the event
     socket.emit('joinRoom', id);
-    
-    // Remove previous listeners
-    socket.off('loadMessages');
-    socket.off('newMessage');
-
-    // Load previous messages
+  
     socket.on('loadMessages', (previousMessages) => {
-      console.log('Previous messages:', previousMessages); // Log for debugging
+      console.log('Previous Messages:', previousMessages); // Log received messages
       setMessages(previousMessages);
     });
-
-    // Listen for new messages
+  
     socket.on('newMessage', (msg) => {
-      console.log('New message received:', msg); // Log for debugging
+      console.log('New Message Received:', msg); // Log new messages
       setMessages((prev) => [...prev, msg]);
     });
-
+  
+    socket.on('newReply', (updatedMessage) => {
+      console.log('New Reply Received:', updatedMessage); // Log updated message with replies
+      setMessages((prevMessages) =>
+        prevMessages.map((msg) => 
+          msg._id === updatedMessage._id ? updatedMessage : msg
+        )
+      );
+    });
+  
     return () => {
-      socket.emit('leaveRoom', id); // Leave the current room on unmount
+      socket.emit('leaveRoom', id);
     };
-  }, [id]); // Re-run when the event ID changes
+  }, [id]);
+  
 
-  // Function to send a new message
   const sendMessage = () => {
     if (message.trim()) {
-      socket.emit('qaMessage', { eventId: id, message });
-      setMessage(''); // Clear the input field
+      const username = Cookies.get('userName'); // Function to get username from cookies
+      socket.emit('qaMessage', { eventId: id, message, username });
+      setMessage('');
     }
+  };
+
+  const sendReply = () => {
+    if (replyMessage.trim() && replyTo) {
+      const username = Cookies.get('userName'); // Function to get username from cookies
+      socket.emit('newReply', { reply: replyMessage, replyTo, username, eventId: id }); // Include eventId
+      setReplyMessage('');
+      setReplyTo(null); // Clear the reply target
+    }
+  };
+
+  const handleReply = (msgId) => {
+    setReplyTo(msgId); // Set the message ID you are replying to
   };
 
   return (
     <div>
       <h3>Q&A Session</h3>
       <div className="message-box">
-        {messages.map((msg, index) => (
-          <p key={index}>{msg.message}</p> // Display the message
+        {messages.map((msg) => (
+          <div key={msg._id}>
+            <p><strong>{msg.username}</strong>: {msg.message}</p>
+            <button onClick={() => handleReply(msg._id)}>Reply</button>
+            {msg.replies && msg.replies.map((reply, replyIndex) => (
+              <div key={`${msg._id}-${replyIndex}`} style={{ marginLeft: '20px' }}>
+                <p><strong>{reply.username}</strong>: {reply.message}</p>
+              </div>
+            ))}
+          </div>
         ))}
       </div>
       <input
         type="text"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)} // Update the message state
-        placeholder="Ask a question..."
+        value={replyTo ? replyMessage : message}
+        onChange={(e) => replyTo ? setReplyMessage(e.target.value) : setMessage(e.target.value)}
+        placeholder={replyTo ? 'Reply...' : 'Ask a question...'}
       />
-      <button onClick={sendMessage}>Send</button> {/* Button to send the message */}
+      <button onClick={replyTo ? sendReply : sendMessage}>{replyTo ? 'Send Reply' : 'Send'}</button>
     </div>
   );
 }

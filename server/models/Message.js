@@ -1,10 +1,17 @@
 const mongoose = require('mongoose');
 
+const replySchema = new mongoose.Schema({
+  username: String,
+  message: String,
+});
+
 const messageSchema = new mongoose.Schema({
-  eventId: { type: mongoose.Schema.Types.ObjectId, ref: 'Event', required: true },
-  message: { type: String, required: true },
-  sender: { type: String }, // Optional, for storing the sender's name
+  eventId: { type: mongoose.Schema.Types.ObjectId, ref: 'Event' },
+  message: String,
+  username: String,
+  replies: [replySchema], // Store replies as an array
   timestamp: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model('Message', messageSchema);
+const Message = mongoose.model('Message', messageSchema);
+module.exports = Message;

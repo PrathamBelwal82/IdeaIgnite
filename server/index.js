@@ -4,18 +4,19 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const http = require('http');
 const path = require('path');
-const { Server } = require('socket.io'); // Import Socket.io
+const { Server } = require('socket.io');
+const passport = require('passport');
 
 dotenv.config();
 
 const app = express();
-const server = http.createServer(app); // Create HTTP server
+const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:5173', // Update with your frontend URL
+    origin: 'http://localhost:5173',
     methods: ['GET', 'POST'],
-    credentials: true
-  }
+    credentials: true,
+  },
 });
 
 // Static file serving for uploads
@@ -23,7 +24,6 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const allowedOrigins = ['http://localhost:5173'];
 
-// CORS middleware configuration
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
@@ -32,9 +32,10 @@ app.use(cors({
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true
+  credentials: true,
 }));
 
+app.use(passport.initialize());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -51,7 +52,7 @@ process.on('unhandledRejection', (reason, promise) => {
   process.exit(1);
 });
 
-const Message = require('./models/Message'); // Import the Message model
+const Message = require('./models/Message');
 
 io.on('connection', (socket) => {
   socket.on('joinRoom', async (eventId) => {
@@ -66,23 +67,36 @@ io.on('connection', (socket) => {
       socket.emit('loadMessages', []); // Send an empty array if an error occurs
     }
   });
-  socket.on('qaMessage', async ({ eventId, message }) => {
+
+  socket.on('qaMessage', async ({ eventId, message, username }) => {
     try {
-      const newMessage = await Message.create({ eventId, message }); // Save the message to DB
-      io.to(eventId).emit('newMessage', newMessage); // Broadcast the new message
+      const newMessage = await Message.create({ eventId, message, username });
+      io.to(eventId).emit('newMessage', newMessage);
     } catch (err) {
       console.error('Error saving message:', err);
     }
   });
-  
+
+  socket.on('newReply', async ({ reply, replyTo, username, eventId }) => {
+    try {
+      const replyData = { message: reply, username };
+      const updatedMessage = await Message.findOneAndUpdate(
+        { _id: replyTo },
+        { $push: { replies: replyData } },
+        { new: true }
+      );
+
+      io.to(eventId).emit('newReply', updatedMessage);
+    } catch (err) {
+      console.error('Error saving reply:', err);
+    }
+  });
+
   socket.on('leaveRoom', (eventId) => {
     socket.leave(eventId);
     console.log(`User left room: ${eventId}`);
   });
-
-  // Other socket events (like qaMessage)...
 });
-
 
 // Routes
 const authRoutes = require('./routes/auth');
@@ -98,6 +112,6 @@ app.use('/events', eventRoutes);
 
 const PORT = process.env.PORT || 4000;
 
-server.listen(PORT, () => { // Use server instead of app
+server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

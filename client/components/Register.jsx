@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextField, Button, Container, Typography, RadioGroup, FormControlLabel, Radio } from '@mui/material';
+import { TextField, Button, Container, Typography, RadioGroup, FormControlLabel, Radio, Box, Paper } from '@mui/material';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
@@ -7,34 +7,29 @@ import Cookies from 'js-cookie';
 function Register() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [userName, setUserName] = useState(''); // Correct variable name
+  const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [userType, setUserType] = useState('normal'); // Default to 'normal'
+  const [userType, setUserType] = useState('normal');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/register', {
+      const response = await axios.post('http://localhost:4000/register', {
         firstName,
         lastName,
-        userName, // Use correct variable name
+        userName,
         email,
         password,
-        userType
+        userType,
       });
 
-      // Log the entire response object
-      console.log(response);
-
-      // Ensure the response data structure matches your expectations
       const { token, userId, userName: responseUserName, userType: responseUserType } = response.data;
 
-      // Store token and user information in cookies
       Cookies.set('token', token, { expires: 15 });
       Cookies.set('userId', userId, { expires: 15 });
-      Cookies.set('userName', responseUserName, { expires: 15 }); // Use correct variable name
+      Cookies.set('userName', responseUserName, { expires: 15 });
       Cookies.set('userType', responseUserType, { expires: 15 });
 
       navigate('/');
@@ -44,16 +39,15 @@ function Register() {
   };
 
   return (
-    <Container>
-      <Typography variant="h4">Register</Typography>
-      <form onSubmit={handleSubmit}>
+    <Container component={Paper} elevation={3} sx={{ p: 4, mt: 8, maxWidth: 500 }}>
+      <Typography variant="h4" align="center" gutterBottom>Register</Typography>
+      <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         <TextField
           label="First Name"
           fullWidth
           required
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
-          margin="normal"
         />
         <TextField
           label="Last Name"
@@ -61,15 +55,13 @@ function Register() {
           required
           value={lastName}
           onChange={(e) => setLastName(e.target.value)}
-          margin="normal"
         />
         <TextField
-          label="Username" // Correct label name
+          label="Username"
           fullWidth
           required
           value={userName}
-          onChange={(e) => setUserName(e.target.value)} // Use correct state updater
-          margin="normal"
+          onChange={(e) => setUserName(e.target.value)}
         />
         <TextField
           label="Email"
@@ -78,7 +70,6 @@ function Register() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          margin="normal"
         />
         <TextField
           label="Password"
@@ -87,7 +78,6 @@ function Register() {
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          margin="normal"
         />
         <Typography variant="h6">User Type</Typography>
         <RadioGroup
@@ -98,10 +88,10 @@ function Register() {
           <FormControlLabel value="normal" control={<Radio />} label="Normal User" />
           <FormControlLabel value="company" control={<Radio />} label="Company" />
         </RadioGroup>
-        <Button type="submit" variant="contained" color="primary">
+        <Button type="submit" variant="contained" color="primary" fullWidth>
           Register
         </Button>
-      </form>
+      </Box>
     </Container>
   );
 }

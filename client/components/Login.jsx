@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextField, Button, Container, Typography } from '@mui/material';
+import { TextField, Button, Container, Typography, Box, Paper } from '@mui/material';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
@@ -12,26 +12,24 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/login', { email, password });
+      const response = await axios.post('http://localhost:4000/login', { email, password });
       const { token, userId, userType } = response.data;
 
-      // Store token and user information in cookies
-      Cookies.set('token', token, { expires: 15 }); // Token valid for 15 days
+      Cookies.set('token', token, { expires: 15 });
       Cookies.set('userId', userId, { expires: 15 });
       Cookies.set('userType', userType, { expires: 15 });
 
       navigate('/');
     } catch (error) {
+      navigate('/register');
       console.error(error.response.data.message);
     }
   };
 
   return (
-    <div>
-    
-    <Container>
-      <Typography variant="h4">Login</Typography>
-      <form onSubmit={handleSubmit}>
+    <Container component={Paper} elevation={3} sx={{ p: 4, mt: 8, maxWidth: 400 }}>
+      <Typography variant="h4" align="center" gutterBottom>Login</Typography>
+      <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         <TextField
           label="Email"
           type="email"
@@ -39,7 +37,6 @@ function Login() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          margin="normal"
         />
         <TextField
           label="Password"
@@ -48,13 +45,10 @@ function Login() {
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          margin="normal"
         />
-        <Button type="submit" variant="contained" color="primary">
-          Login
-        </Button>
-      </form>
-    </Container></div>
+        <Button type="submit" variant="contained" color="primary" fullWidth>Login</Button>
+      </Box>
+    </Container>
   );
 }
 
