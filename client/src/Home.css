@@ -92,3 +92,14 @@
     box-shadow: none;
   }
   
+
+  .event-funding {
+    font-weight: bold;
+    color: green; /* Change to your preferred color */
+  }
+  
+  .event-time-left {
+    font-weight: bold;
+    color: red; /* Change to your preferred color */
+  }
+  

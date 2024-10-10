@@ -1,26 +1,74 @@
 .event-details {
-    padding: 20px;
-  }
-  
-  .video-donation-container {
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .video-container {
-    flex: 10; /* Adjust the width as needed */
-    margin-right: 20px; /* Space between video and donation section */
-  }
-  
-  .donation-placeholder {
-    flex: 7; /* Adjust the width as needed */
-    margin-top: 90px;
-    border: 1px solid #ccc;
-    padding: 10px;
-    background-color: #f9f9f9; /* Optional: background color */
-  }
-  
-  .event-images {
-    margin-top: 20px; /* Space below video and donations */
-  }
-  
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+.event-title {
+  text-align: center;
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+.video-donation-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 30px;
+}
+
+.video-container {
+  flex: 1;
+  margin-right: 20px;
+}
+
+.donation-box {
+  flex: 0 0 300px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.donation-box h2 {
+  margin-bottom: 10px;
+}
+
+.donation-box button {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.donation-box button:hover {
+  background-color: #0056b3;
+}
+
+.event-description {
+  margin-top: 30px;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.event-images {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.event-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}

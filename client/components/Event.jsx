@@ -1,36 +1,42 @@
 import React, { useState } from 'react';
 import EventDetails from './EventDetails';
 import QASession from './QASession';
-import '../src/Event.css'
-function Event() {
-  const [activeTab, setActiveTab] = useState('details');
+import { Tabs, Tab, Box, Button } from '@mui/material';
 
-  const handleTabClick = (tab) => {
-    setActiveTab(tab);
+function Event() {
+  const [activeTab, setActiveTab] = useState(0);
+
+  const handleTabChange = (event, newValue) => {
+    setActiveTab(newValue);
   };
 
   return (
-    <div>
-      {/* Navbar to switch between Details and Q&A */}
-      <div className="event-navbar">
-        <button 
-          className={activeTab === 'details' ? 'active' : ''} 
-          onClick={() => handleTabClick('details')}
-        >
-          Details
-        </button>
-        <button 
-          className={activeTab === 'QA' ? 'active' : ''} 
-          onClick={() => handleTabClick('QA')}
-        >
-          Q&A
-        </button>
-      </div>
+    <Box sx={{ width: '100%', maxWidth: '1200px', margin: '0 auto' }}>
+      {/* Tabs for switching between Details and Q&A */}
+      <Tabs
+        value={activeTab}
+        onChange={handleTabChange}
+        indicatorColor="primary"
+        textColor="primary"
+        aria-label="event navigation tabs"
+        sx={{
+          borderBottom: 1,
+          borderColor: 'divider',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
+          <Tab label="Details" />
+          <Tab label="Q&A" />
+      </Tabs>
 
       {/* Content switching based on active tab */}
-      {activeTab === 'details' && <EventDetails />}
-      {activeTab === 'QA' && <QASession />}
-    </div>
+      <Box sx={{ padding: '20px 0' }}>
+        {activeTab === 0 && <EventDetails />}
+        {activeTab === 1 && <QASession />}
+      </Box>
+    </Box>
   );
 }
 
