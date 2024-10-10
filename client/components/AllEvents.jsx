@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import "../src/AllEvents.css"; // Make sure to include your CSS styles
+
 
 const AllEvents = () => {
   const { category } = useParams(); // Get category from URL
