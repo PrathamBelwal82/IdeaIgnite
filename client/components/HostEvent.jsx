@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import { Container, TextField, Button, Typography, Grid, Box } from '@mui/material';
-
+import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 function HostEvent() {
   const [description, setDescription] = useState(''); // Description state
   const [images, setImages] = useState([]); // State to hold multiple images
@@ -10,7 +11,14 @@ function HostEvent() {
   const [category, setCategory] = useState('');
   const [totalFunds, setTotalFunds] = useState(0); // Total funds to raise
   const [endDate, setEndDate] = useState(''); // Event end date
-
+  const navigate = useNavigate();
+  const userType=Cookies.get('userType');
+  useEffect(() => {
+    if (userType !== "Creator") {
+      alert('Please login using your creator account');
+      navigate('/login');
+    }
+  }, [navigate, userType]);
   // Handlers
   const handleCompanyChange = (e) => setCompany(e.target.value);
   const handleCategoryChange = (e) => setCategory(e.target.value);

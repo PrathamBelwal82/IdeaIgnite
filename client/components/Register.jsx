@@ -85,8 +85,8 @@ function Register() {
           onChange={(e) => setUserType(e.target.value)}
           row
         >
-          <FormControlLabel value="normal" control={<Radio />} label="Normal User" />
-          <FormControlLabel value="company" control={<Radio />} label="Company" />
+          <FormControlLabel value="Supporter" control={<Radio />} label="Supporter" />
+          <FormControlLabel value="Creator" control={<Radio />} label="Creator" />
         </RadioGroup>
         <Button type="submit" variant="contained" color="primary" fullWidth>
           Register

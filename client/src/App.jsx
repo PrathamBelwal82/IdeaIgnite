@@ -31,11 +31,12 @@ function App() {
 
         <Routes>
           {/* Public routes */}
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
+
           <Route path="/register" element={<Register />} />
 
           {/* Home and event pages are public */}
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home isLoggedIn={isLoggedIn} />} />
           <Route path="/event/:id" element={<Event />} />
           <Route path="/event/:id/details" element={<EventDetails />} />
           <Route path="/event/:id/QA" element={<QASession />} />

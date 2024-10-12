@@ -13,7 +13,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:5173',
+    origin: 'https://idea-ignite-2.vercel.app/',
     methods: ['GET', 'POST'],
     credentials: true,
   },
@@ -22,7 +22,7 @@ const io = new Server(server, {
 // Static file serving for uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-const allowedOrigins = ['http://localhost:5173'];
+const allowedOrigins = ['https://idea-ignite-2.vercel.app/'];
 
 app.use(cors({
   origin: function (origin, callback) {

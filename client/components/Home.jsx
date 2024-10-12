@@ -4,18 +4,12 @@ import Cookies from "js-cookie";
 //import Navbar from './Navbar'; // Import the Navbar
 import "../src/Home.css";
 
-function Home() {
+function Home({ isLoggedIn }) {
   const [events, setEvents] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("all"); // Default to "all"
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = Cookies.get('token');
-    if (token) {
-      setIsLoggedIn(true);
-    }
-  }, []);
+
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -63,16 +57,16 @@ function Home() {
 
   return (
     <div className="homepage">
-      
-      
-
       <div className="events-section">
         {events.length === 0 ? (
           <p>No events found.</p>
         ) : (
           <div className="events-grid">
             {events.map((event) => {
-              const percentageFunded = ((event.fundsRaises / event.totalFunds) * 100).toFixed(2); // Calculate percentage funded
+              const percentageFunded = (
+                (event.fundsRaises / event.totalFunds) *
+                100
+              ).toFixed(2); // Calculate percentage funded
               const timeLeft = new Date(event.endDate) - new Date(); // Time left in milliseconds
               const daysLeft = Math.ceil(timeLeft / (1000 * 60 * 60 * 24)); // Convert to days
 
@@ -86,9 +80,7 @@ function Home() {
                     />
                     <h2 className="event-title">{event.company}</h2>
                     <p className="event-category">{event.category}</p>
-                    <p className="event-funding">
-                      {percentageFunded}% funded
-                    </p>
+                    <p className="event-funding">{percentageFunded}% funded</p>
                     <p className="event-time-left">
                       {daysLeft > 0 ? `${daysLeft} days left` : "Event ended"}
                     </p>
