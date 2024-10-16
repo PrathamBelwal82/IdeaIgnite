@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   AppBar,
   Toolbar,
@@ -6,6 +6,7 @@ import {
   Button,
   InputBase,
   Box,
+  IconButton,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { styled } from "@mui/material/styles";
@@ -24,8 +25,20 @@ const Search = styled("div")(({ theme }) => ({
   },
 }));
 
+const SearchIconWrapper = styled("div")(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: "100%",
+  position: "absolute",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  cursor: "pointer",
+}));
+
 const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState(""); // State to hold the search input
+
   const categories = [
     "Art",
     "Comics",
@@ -55,6 +68,19 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
     navigate("/login"); // Redirect to login page after logout
   };
 
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  // Handle search submit (either pressing Enter or clicking the search icon)
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?query=${searchQuery}`); // Redirect to a search results page
+    }
+  };
+
   return (
     <AppBar position="static" color="transparent" elevation={0}>
       <Toolbar>
@@ -66,11 +92,20 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
 
         {/* Search bar */}
         <Search>
-          <InputBase
-            placeholder="Search projects, creators, and categories"
-            inputProps={{ "aria-label": "search" }}
-          />
-          <SearchIcon />
+          <form onSubmit={handleSearchSubmit} style={{ display: "flex" }}>
+            <InputBase
+              placeholder="Search projects, creators, and categories"
+              inputProps={{ "aria-label": "search" }}
+              value={searchQuery}
+              onChange={handleSearchChange}
+              sx={{ width: "100%" }}
+            />
+            <SearchIconWrapper onClick={handleSearchSubmit}>
+              <IconButton aria-label="search">
+                <SearchIcon />
+              </IconButton>
+            </SearchIconWrapper>
+          </form>
         </Search>
 
         {/* Buttons */}

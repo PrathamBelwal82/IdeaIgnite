@@ -40,6 +40,28 @@ router.get('/category/:category', async (req, res) => {
   }
 });
 
+router.get('/search', async (req, res) => {
+  try {
+    const query = req.query.query; // Extract the search query from the request
+    if (!query) {
+      return res.status(400).json({ message: 'No search query provided' });
+    }
+
+    // Search by event name or category (or any other field)
+    const results = await Event.find({
+      $or: [
+        { name: { $regex: query, $options: 'i' } },   // Case-insensitive search in the "name" field
+        { category: { $regex: query, $options: 'i' } } // Case-insensitive search in the "category" field
+      ]
+    });
+
+    res.json(results); // Return the filtered search results
+  } catch (error) {
+    console.error('Error fetching search results:', error);
+    res.status(500).json({ message: 'Server error while fetching search results' });
+  }
+});
+
 // POST route to create a new event
 // POST route to create a new event
 router.post('/', upload.fields([{ name: 'video', maxCount: 1 }, { name: 'thumbnail', maxCount: 1 }, { name: 'images', maxCount: 5 }]), async (req, res) => {

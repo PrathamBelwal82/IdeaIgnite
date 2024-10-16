@@ -11,7 +11,7 @@ import Register from '../components/Register';
 import QASession from '../components/QASession';
 import Login from '../components/Login';
 import ProtectedRoute from './ProtectedRoute'; // Import the ProtectedRoute
-
+import SearchResults from '../components/SearchResults';
 import './App.css';
 
 function App() {
@@ -41,7 +41,7 @@ function App() {
           <Route path="/event/:id/details" element={<EventDetails />} />
           <Route path="/event/:id/QA" element={<QASession />} />
           <Route path="/events/category/:category" element={<AllEvents />} />
-
+          <Route path="/search" element={<SearchResults />} /> 
           {/* Protected routes (only accessible when logged in) */}
           <Route
             path="/host-event"

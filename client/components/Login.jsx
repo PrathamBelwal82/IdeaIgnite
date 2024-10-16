@@ -31,7 +31,8 @@ function Login({ setIsLoggedIn }) {
   
 
   return (
-    <Container component={Paper} elevation={3} sx={{ p: 4, mt: 8, maxWidth: 400 }}>
+    <div>Website is down will bring back soon asap</div>
+    /*<Container component={Paper} elevation={3} sx={{ p: 4, mt: 8, maxWidth: 400 }}>
       <Typography variant="h4" align="center" gutterBottom>Login</Typography>
       <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         <TextField
@@ -52,7 +53,7 @@ function Login({ setIsLoggedIn }) {
         />
         <Button type="submit" variant="contained" color="primary" fullWidth>Login</Button>
       </Box>
-    </Container>
+    </Container>*/
   );
 }
 
