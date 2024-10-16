@@ -36,6 +36,7 @@ function Home({ isLoggedIn }) {
     return (
       <div className="homepage">
         <h1>Welcome to IdeaIgnite</h1>
+        <div>Website is down will bring back soon asap</div>
         <p>Please login or register to explore events.</p>
         <div className="auth-options">
           <button
